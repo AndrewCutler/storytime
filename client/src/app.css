@@ -1,2 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+	name: 'storytime';
+	default: true;
+	prefersdark: true;
+	color-scheme: 'dark';
+	--color-base-100: oklch(26% 0.065 152.934);
+	--color-base-200: oklch(39% 0.095 152.535);
+	--color-base-300: oklch(44% 0.119 151.328);
+	--color-base-content: oklch(96% 0.044 156.743);
+	--color-primary: oklch(70% 0.183 293.541);
+	--color-primary-content: oklch(28% 0.141 291.089);
+	--color-secondary: oklch(75% 0.183 55.934);
+	--color-secondary-content: oklch(26% 0.079 36.259);
+	--color-accent: oklch(70% 0.165 254.624);
+	--color-accent-content: oklch(28% 0.091 267.935);
+	--color-neutral: oklch(44% 0.119 151.328);
+	--color-neutral-content: oklch(98% 0.018 155.826);
+	--color-info: oklch(74% 0.16 232.661);
+	--color-info-content: oklch(29% 0.066 243.157);
+	--color-success: oklch(79% 0.209 151.711);
+	--color-success-content: oklch(26% 0.065 152.934);
+	--color-warning: oklch(85% 0.199 91.936);
+	--color-warning-content: oklch(28% 0.066 53.813);
+	--color-error: oklch(71% 0.202 349.761);
+	--color-error-content: oklch(28% 0.109 3.907);
+	--radius-selector: 1rem;
+	--radius-field: 1rem;
+	--radius-box: 0.5rem;
+	--size-selector: 0.25rem;
+	--size-field: 0.25rem;
+	--border: 2px;
+	--depth: 1;
+	--noise: 0;
+}
+
+html, body {
+	min-height: 100dvh;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+}
+
+html {
+	font-size: 16px; /* Base font size */
+	font-family: 'Caveat', cursive;
+}
+
+/* Responsive font sizes */
+h1 {
+	font-size: 2.5rem; /* 40px */
+}
+
+h2 {
+	font-size: 2rem; /* 32px */
+}
+
+h3 {
+	font-size: 1.75rem; /* 28px */
+}
+
+h4 {
+	font-size: 1.5rem; /* 24px */
+}
+
+h5 {
+	font-size: 1.25rem; /* 20px */
+}
+
+h6 {
+	font-size: 1rem; /* 16px */
+}
+
+p, li, a, button, input, textarea {
+	font-size: 1rem; /* 16px */
+}
+
+small {
+	font-size: 0.875rem; /* 14px */
+}
+
+/* Media queries for responsive font sizing */
+@media (max-width: 768px) {
+	html {
+		font-size: 14px; /* Slightly smaller base size on mobile */
+	}
+}
+
+@media (min-width: 1200px) {
+	html {
+		font-size: 18px; /* Larger base size on big screens */
+	}
+}

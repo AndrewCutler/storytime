@@ -1,20 +1,30 @@
 <script lang="ts">
-	const animals = ['bear', 'tiger', 'wolf', 'butterfly'] as const;
+	type Animal = { name: string; alt: string; src: string };
+	const animals: Animal[] = [
+		{ name: 'bear', src: 'bear.png', alt: 'Wolf' },
+		{ name: 'tiger', src: 'tiger.png', alt: 'Tiger' },
+		{ name: 'wolf', src: 'wolf.png', alt: 'Bear' },
+		{ name: 'butterfly', src: 'butterfly.png', alt: 'Butterfly' }
+	] as const;
+	// todo: should have an image for each of these too
 	const actions = ['paint', 'dance', 'sing', 'sleep'] as const;
+	// todo: should have an image for each of these too
 	const chores = ['clean the house', 'do the yardwork', 'cook dinner', 'go shopping'] as const;
 	type Choice = (typeof animals | typeof actions | typeof chores)[number];
 
 	const MAX_PROMPTS: number = 3 as const;
+	// todo: should be an object, not an array of mixed types
 	let choices: Choice[] = $state([]);
+	let story: string = $state('');
 
 	let prompt = $derived.by(() => {
 		switch (choices.length) {
 			case 0:
 				return 'First, pick an animal.';
 			case 1:
-				return `Now, what does the ${choices[0]} like to do?`;
+				return `Now, what does the ${(choices[0] as Animal).name} like to do?`;
 			case 2:
-				return `But before ${choices[1]}, the ${choices[0]} has to...`;
+				return `But before ${choices[1]}, the ${(choices[0] as Animal).name} has to...`;
 			default:
 				return '';
 		}
@@ -23,7 +33,7 @@
 	let options = $derived.by(() => {
 		switch (choices.length) {
 			case 0:
-				return animals as unknown as string[];
+				return animals;
 			case 1:
 				return actions as unknown as string[];
 			case 2:
@@ -33,14 +43,24 @@
 		}
 	});
 
+	let friend = $derived(
+		(choices.filter((_, i) => i !== 0) as Animal[])[Math.floor(Math.random() * choices.length - 1)]
+	);
+
+    $inspect(friend)
+    $inspect(choices)
+
 	async function generateStory(): Promise<void> {
-		const body = `create a children's story about a ${choices[0]} that likes to ${choices[1]} but has to ${choices[2]} first`;
+		const body = `create a children's story about a ${(choices[0] as Animal).name} that likes to ${choices[1]} but has to ${choices[2]} first with his friend ${friend} and do it at a 1st grade reading level`;
+		// todo: try/catch
 		const res = await fetch('http://localhost:8000', {
 			method: 'POST',
 			body
 		});
+		// todo: try/catch
 		const text = await res.text();
-		console.log(text);
+		story = text;
+		console.log(story);
 	}
 
 	function makeChoice(choice: Choice) {
@@ -52,10 +72,28 @@
 	}
 </script>
 
-<h4>Let's write a story!</h4>
+<!-- TODO: animations. Transitions between each choice, with feedback like "Good choice", "Oh, dancing is fun!", etc. -->
 
-<div>{prompt}</div>
-<div class="flex flex-col">
-	{#each options as option}<button onclick={() => makeChoice(option as Choice)}>{option}</button
-		>{/each}
+<div class="align-center flex flex-col gap-8 text-lg">
+	<div class="flex justify-center">
+		<h2>Let's write a story!</h2>
+	</div>
+
+	<div class="flex justify-center">{prompt}</div>
+
+	<div class="flex flex-col gap-5">
+		{#each options as option}<div class="align-center flex flex-col gap-2">
+				{#if typeof option === 'object'}
+					<div class="flex justify-center">
+						<img src={option.src} alt={option.alt} title={option.alt} width="100" height="100" />
+					</div>
+					<button onclick={() => makeChoice(option as Choice)}>{option.name}</button>
+				{:else}
+					<button onclick={() => makeChoice(option as Choice)}>{option}</button>
+				{/if}
+			</div>{/each}
+	</div>
+	<div class="whitespace-pre-wrap text-wrap p-10 p-3 text-[1rem]">
+		{story}
+	</div>
 </div>
