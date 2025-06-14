@@ -43,14 +43,17 @@
 		}
 	});
 
+	let loading = $state(false);
+
 	let friend = $derived(
 		(choices.filter((_, i) => i !== 0) as Animal[])[Math.floor(Math.random() * choices.length - 1)]
 	);
 
-    $inspect(friend)
-    $inspect(choices)
+	$inspect(friend);
+	$inspect(choices);
 
 	async function generateStory(): Promise<void> {
+		loading = true;
 		const body = `create a children's story about a ${(choices[0] as Animal).name} that likes to ${choices[1]} but has to ${choices[2]} first with his friend ${friend} and do it at a 1st grade reading level`;
 		// todo: try/catch
 		const res = await fetch('http://localhost:8000', {
@@ -61,6 +64,7 @@
 		const text = await res.text();
 		story = text;
 		console.log(story);
+		loading = false;
 	}
 
 	function makeChoice(choice: Choice) {
@@ -93,7 +97,8 @@
 				{/if}
 			</div>{/each}
 	</div>
-	<div class="whitespace-pre-wrap text-wrap p-10 p-3 text-[1rem]">
+	{#if loading}<div class="p-10">Loading...</div>{/if}
+	<div class="whitespace-pre-wrap text-wrap p-10 text-[1rem] text-center">
 		{story}
 	</div>
 </div>

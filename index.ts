@@ -1,19 +1,24 @@
-import Together from 'together-ai';
+import 'dotenv/config';
+import { Together } from 'together-ai';
 import * as http from 'http';
 
 const PORT = 8000;
 const ALLOWED_ORIGIN = 'http://localhost:5173' as const;
-// use environment variable, TOGETHER_API_KEY
+
+if (!process.env.TOGETHER_API_KEY) {
+	throw new Error('TOGETHER_API_KEY environment variable is not set');
+}
+
+console.log(process.env.TOGETHER_API_KEY);
+
 const together = new Together({
-	apiKey: '939d5863eb54f9fd11aaccc9f0e03831b15116f4b3f9402cdd4594aa18d768bc',
+	apiKey: process.env.TOGETHER_API_KEY,
 });
 
 async function handler(req: http.IncomingMessage, res: http.ServerResponse) {
 	const {
 		headers: { origin, referer },
 	} = req;
-
-	console.log(origin, referer);
 
 	// todo: create custom handlers for each route
 	if ([origin, referer].some((x) => x?.startsWith(ALLOWED_ORIGIN))) {
