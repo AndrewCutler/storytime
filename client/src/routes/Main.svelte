@@ -85,20 +85,23 @@
 
 	<div class="flex justify-center">{prompt}</div>
 
-	<div class="flex flex-col gap-5">
-		{#each options as option}<div class="align-center flex flex-col gap-2">
+	<div class="flex flex-col items-center gap-5">
+		{#each options as option}<button
+				onclick={() => makeChoice(option as Choice)}
+				class="align-center flex max-w-md min-w-1/4 flex-col gap-2 cursor-pointer hover:scale-110 transition-transform"
+			>
 				{#if typeof option === 'object'}
 					<div class="flex justify-center">
 						<img src={option.src} alt={option.alt} title={option.alt} width="100" height="100" />
 					</div>
-					<button onclick={() => makeChoice(option as Choice)}>{option.name}</button>
+					<div>{option.name}</div>
 				{:else}
-					<button onclick={() => makeChoice(option as Choice)}>{option}</button>
+					<div>{option}</div>
 				{/if}
-			</div>{/each}
+			</button>{/each}
 	</div>
 	{#if loading}<div class="p-10">Loading...</div>{/if}
-	<div class="whitespace-pre-wrap text-wrap p-10 text-[1rem] text-center">
+	<div class="whitespace-pre-wrap text-wrap p-10 text-center text-[1rem]">
 		{story}
 	</div>
 </div>

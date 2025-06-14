@@ -1,5 +1,5 @@
 <script>
-	import ComponentThatGathersUserPrompts from './ComponentThatGathersUserPrompts.svelte';
+	import Main from './Main.svelte';
 </script>
 
-<ComponentThatGathersUserPrompts />
+<Main />

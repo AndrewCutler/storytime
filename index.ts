@@ -9,8 +9,6 @@ if (!process.env.TOGETHER_API_KEY) {
 	throw new Error('TOGETHER_API_KEY environment variable is not set');
 }
 
-console.log(process.env.TOGETHER_API_KEY);
-
 const together = new Together({
 	apiKey: process.env.TOGETHER_API_KEY,
 });
@@ -62,19 +60,29 @@ async function getStory(prompt: string): Promise<string | undefined> {
 	return response.choices[0].message?.content ?? undefined;
 }
 
-// async function generateImage() {
-// 	const response = await together.images.create({
-// 		model: 'black-forest-labs/FLUX.1-depth',
-// 		width: 1024,
-// 		height: 1024,
-// 		steps: 28,
-// 		prompt: 'make his fur black',
-// 		// @ts-ignore
-// 		image_url: 'https://easydrawingguides.com/wp-content/uploads/2022/11/how-to-draw-an-easy-bear-face-featured-image-1200.png',
-// 	});
+async function generateImage() {
+	// const response = await together.images.create({
+	// 	model: 'black-forest-labs/FLUX.1-depth',
+	// 	width: 1024,
+	// 	height: 1024,
+	// 	steps: 28,
+	// 	prompt: 'make his fur black',
+	// 	// @ts-ignore
+	// 	image_url: 'https://easydrawingguides.com/wp-content/uploads/2022/11/how-to-draw-an-easy-bear-face-featured-image-1200.png',
+	// });
 
-// 	// @ts-ignore
-// 	console.log(response.data[0].url);
-// }
+	// // @ts-ignore
+	// console.log(response.data[0].url);
+
+	const response = await together.images.create({
+		prompt: 'a dancing cartoon bee with a tophat',
+		model: 'black-forest-labs/FLUX.1-schnell',
+		steps: 12,
+		seed: 100,
+		output_format: 'png',
+	});
+
+	console.log(response.data[0].url);
+}
 
 // generateImage();
