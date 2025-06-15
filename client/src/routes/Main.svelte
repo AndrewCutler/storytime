@@ -16,7 +16,6 @@
 	// todo: should be an object, not an array of mixed types
 	let choices: Choice[] = $state([]);
 	let story: string = $state('');
-
 	let prompt = $derived.by(() => {
 		switch (choices.length) {
 			case 0:
@@ -29,7 +28,6 @@
 				return '';
 		}
 	});
-
 	let options = $derived.by(() => {
 		switch (choices.length) {
 			case 0:
@@ -42,15 +40,15 @@
 				return [];
 		}
 	});
-
 	let loading = $state(false);
-
+	let animal = $state<Animal | undefined>();
 	let friend = $derived(
 		(choices.filter((_, i) => i !== 0) as Animal[])[Math.floor(Math.random() * choices.length - 1)]
 	);
 
 	$inspect(friend);
 	$inspect(choices);
+	$inspect(animal);
 
 	async function generateStory(): Promise<void> {
 		loading = true;
@@ -68,11 +66,17 @@
 	}
 
 	function makeChoice(choice: Choice) {
-		choices.push(choice);
-
-		if (choices.length === MAX_PROMPTS) {
-			generateStory();
+		if (choices.length === 0) {
+			animal = choice as Animal;
 		}
+
+		setTimeout(function () {
+			choices.push(choice);
+
+			if (choices.length === MAX_PROMPTS) {
+				generateStory();
+			}
+		}, 1000);
 	}
 </script>
 
@@ -88,7 +92,10 @@
 	<div class="flex flex-col items-center gap-5">
 		{#each options as option}<button
 				onclick={() => makeChoice(option as Choice)}
-				class="align-center flex max-w-md min-w-1/4 flex-col gap-2 cursor-pointer hover:scale-110 transition-transform"
+				class={[
+					'align-center min-w-1/4 flex max-w-md cursor-pointer flex-col gap-2 transition-transform hover:scale-110',
+					{ shrunk: choices.length === 0 && animal?.name === (option as Animal).name }
+				]}
 			>
 				{#if typeof option === 'object'}
 					<div class="flex justify-center">

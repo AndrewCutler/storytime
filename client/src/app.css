@@ -101,3 +101,11 @@ small {
 		font-size: 18px; /* Larger base size on big screens */
 	}
 }
+
+.shrunk {
+    transition: all 1s ease-out;
+	opacity: 0;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+}
