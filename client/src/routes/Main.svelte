@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Loading from './Loading.svelte';
+
 	type ImageChoice = { name: string; alt: string; src: string };
 	const animals: ImageChoice[] = [
 		{ name: 'bear', src: 'bear.png', alt: 'Wolf' },
@@ -53,16 +55,19 @@
 		}
 	});
 
-	let friend = $derived(
-		choices.filter((_, i) => i !== 0)[Math.floor(Math.random() * choices.length - 1)]
-	);
+	let friend = $derived.by(() => {
+		if (choices.length <= 1) return null;
+		const others = choices.slice(1); // drop the first pick
+		const index = Math.floor(Math.random() * others.length);
+		return others[index];
+	});
 
 	$inspect(friend);
 	$inspect(choices);
 
 	async function generateStory(): Promise<void> {
 		loading = true;
-		const body = `create a children's story about a ${choices[0].name} that likes to ${choices[1].name} but has to ${choices[2].name} first with his friend ${friend.name} and do it at a 1st grade reading level`;
+		const body = `create a children's story about a ${choices[0].name} that likes to ${choices[1].name} but has to ${choices[2].name} first with his friend ${friend!.name} and do it at a 1st grade reading level`;
 		// todo: try/catch
 		const res = await fetch('http://localhost:8000', {
 			method: 'POST',
@@ -103,7 +108,7 @@
 				class={[
 					'align-center min-w-1/4 flex max-w-md cursor-pointer flex-col gap-2 transition-transform hover:scale-110',
 					{
-						shrunk: clickedOption?.name === option.name
+						'fade-out': clickedOption?.name === option.name
 					}
 				]}
 			>
@@ -115,7 +120,11 @@
 			</button>
 		{/each}
 	</div>
-	{#if loading}<div class="p-10">Loading...</div>{/if}
+	{#if loading}
+		<div class="flex justify-center">
+			<div class="p-10"><Loading /></div>
+		</div>
+	{/if}
 	<div class="whitespace-pre-wrap text-wrap p-10 text-center text-[1.25rem]">
 		{story}
 	</div>
