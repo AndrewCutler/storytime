@@ -94,38 +94,48 @@
 
 <!-- TODO: animations. Transitions between each choice, with feedback like "Good choice", "Oh, dancing is fun!", etc. -->
 
-<div class="align-center flex flex-col gap-8 text-lg">
+<div class="flex h-full flex-col items-center gap-8 text-lg">
 	<div class="flex justify-center">
 		<h2>Let's write a story!</h2>
 	</div>
 
-	<div class="flex justify-center">{prompt}</div>
+	<div class="fancy-border max-w-4/5 h-full w-4/5" style="background-color: rgb(87, 185, 38)">
+		{#if prompt}<div class="flex justify-center py-5">{prompt}</div>{/if}
 
-	<div class="flex flex-col items-center gap-5">
-		{#each options as option}
-			<button
-				onclick={() => makeChoice(option)}
-				class={[
-					'align-center min-w-1/4 flex max-w-md cursor-pointer flex-col gap-2 transition-transform hover:scale-110',
-					{
-						'fade-out': clickedOption?.name === option.name
-					}
-				]}
-			>
-				{#if option.src}
-					<div class="flex justify-center">
-						<img src={option.src} alt={option.alt} title={option.alt} width="100" height="100" />
-					</div>{/if}
-				<div>{option.name}</div>
-			</button>
-		{/each}
-	</div>
-	{#if loading}
-		<div class="flex justify-center">
-			<div class="p-10"><Loading /></div>
-		</div>
-	{/if}
-	<div class="whitespace-pre-wrap text-wrap p-10 text-center text-[1.25rem]">
-		{story}
+		{#if choices.length !== MAX_PROMPTS}<div class="flex flex-col items-center gap-5">
+				{#each options as option}
+					<button
+						onclick={() => makeChoice(option)}
+						class={[
+							'flex min-w-[25%] max-w-md cursor-pointer flex-col items-center gap-2 transition-transform hover:scale-110',
+							{
+								'fade-out': clickedOption?.name === option.name
+							}
+						]}
+					>
+						{#if option.src}
+							<div class="flex justify-center">
+								<img
+									src={option.src}
+									alt={option.alt}
+									title={option.alt}
+									width="100"
+									height="100"
+								/>
+							</div>{/if}
+						<div>{option.name}</div>
+					</button>
+				{/each}
+			</div>{/if}
+
+		{#if loading}
+			<div class="flex justify-center">
+				<div class="p-10"><Loading /></div>
+			</div>
+		{/if}
+
+		{#if story}<div class="l whitespace-pre-wrap text-wrap p-10 text-center text-3xl/[1.5rem]">
+				{story}
+			</div>{/if}
 	</div>
 </div>
